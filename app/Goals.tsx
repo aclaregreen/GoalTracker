@@ -1,10 +1,11 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function goals() {
+export default function Goals() {
   return (
     <SafeAreaView style={styles.container}>
-      {/* Green Rectangle */}
+      <View style={styles.content}></View>
     </SafeAreaView>
   );
 }
@@ -12,8 +13,11 @@ export default function goals() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center", // Center vertically
-    alignItems: "center", // Center horizontally
     backgroundColor: "#383838",
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
