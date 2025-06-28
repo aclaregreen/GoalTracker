@@ -1,11 +1,11 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function profile() {
+export default function Profile() {
   return (
     <SafeAreaView style={styles.container}>
-      {/* Green Rectangle */}
-      <View style={styles.navbar} />
+      <View style={styles.content}></View>
     </SafeAreaView>
   );
 }
@@ -13,15 +13,11 @@ export default function profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center", // Center vertically
-    alignItems: "center", // Center horizontally
     backgroundColor: "#383838",
   },
-  navbar: {
-    width: "100%",
-    height: "12%",
-    backgroundColor: "#4E4D4D",
-    position: "absolute",
-    bottom: 0,
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
