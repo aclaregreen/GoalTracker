@@ -13,7 +13,7 @@ export default function Goals() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#383838",
+    backgroundColor: "#222222",
   },
   content: {
     flex: 1,
