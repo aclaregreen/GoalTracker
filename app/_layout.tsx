@@ -21,66 +21,74 @@ export default function Layout() {
           //no transitions, again may need to change
           animation: "none",
         }}
-      />
+      >
+        <Stack.Screen name="Start" options={{ headerShown: false }} />
+        <Stack.Screen name="Login" options={{ headerShown: false }} />
+        <Stack.Screen name="CreateAccount" options={{ headerShown: false }} />
+      </Stack>
 
-      {/* Footer/navbar */}
-      <SafeAreaView edges={["bottom"]} style={styles.safeFooterArea}>
-        <View style={styles.navbar}>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => router.push("/Home")}
-          >
-            <Image
-              // source={require("../assets/images/home.png")}
-              source={
-                pathname === "/Home"
-                  ? require("../assets/images/home.png")
-                  : require("../assets/images/home-white.png")
-              }
-              style={styles.navIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => router.push("/Goals")}
-          >
-            <Image
-              source={
-                pathname === "/Goals"
-                  ? require("../assets/images/target.png")
-                  : require("../assets/images/target-white.png")
-              }
-              style={styles.navIcon}
-            ></Image>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => router.push("/Metrics")}
-          >
-            <Image
-              source={
-                pathname === "/Metrics"
-                  ? require("../assets/images/graph.png")
-                  : require("../assets/images/graph-white.png")
-              }
-              style={styles.navIcon}
-            ></Image>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => router.push("/Profile")}
-          >
-            <Image
-              source={
-                pathname === "/Profile"
-                  ? require("../assets/images/profile.png")
-                  : require("../assets/images/profile-white.png")
-              }
-              style={styles.navIcon}
-            ></Image>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      {pathname !== "/Start" &&
+        pathname !== "/Login" &&
+        pathname !== "/CreateAccount" && (
+          // Footer/navbar
+          <SafeAreaView edges={["bottom"]} style={styles.safeFooterArea}>
+            <View style={styles.navbar}>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => router.push("/Home")}
+              >
+                <Image
+                  // source={require("../assets/images/home.png")}
+                  source={
+                    pathname === "/Home"
+                      ? require("../assets/images/home.png")
+                      : require("../assets/images/home-white.png")
+                  }
+                  style={styles.navIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => router.push("/Goals")}
+              >
+                <Image
+                  source={
+                    pathname === "/Goals"
+                      ? require("../assets/images/target.png")
+                      : require("../assets/images/target-white.png")
+                  }
+                  style={styles.navIcon}
+                ></Image>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => router.push("/Metrics")}
+              >
+                <Image
+                  source={
+                    pathname === "/Metrics"
+                      ? require("../assets/images/graph.png")
+                      : require("../assets/images/graph-white.png")
+                  }
+                  style={styles.navIcon}
+                ></Image>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => router.push("/Profile")}
+              >
+                <Image
+                  source={
+                    pathname === "/Profile"
+                      ? require("../assets/images/profile.png")
+                      : require("../assets/images/profile-white.png")
+                  }
+                  style={styles.navIcon}
+                ></Image>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        )}
     </View>
   );
 }
