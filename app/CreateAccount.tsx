@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   View,
   Text,
   TextInput,
@@ -13,6 +14,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { supabase } from "../lib/supabase";
+
+export function validateNewAccount(
+  password: String,
+  confirmPassword: String
+): boolean {
+  if (password == confirmPassword) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export default function SignupScreen() {
   //not used yet but will be for account creation on the database
@@ -21,6 +34,16 @@ export default function SignupScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const router = useRouter();
+
+  async function newSignUp() {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      Alert.alert("Error signing up:", error.message);
+    } else {
+      Alert.alert("Success! Please check your email to confirm.");
+      router.push("/Home");
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
@@ -68,7 +91,7 @@ export default function SignupScreen() {
 
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push("/Home")}
+                onPress={() => newSignUp()}
               >
                 <Text style={styles.buttonText}>Create Account</Text>
               </TouchableOpacity>
