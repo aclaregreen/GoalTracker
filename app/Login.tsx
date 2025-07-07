@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   View,
   Text,
   TextInput,
@@ -13,12 +14,26 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { supabase } from "../lib/supabase";
 
 export default function Login() {
   //variables for the navigation, and email and password currently not used, need to connect to database
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  async function logUserIn() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      Alert.alert("Error logging in:", error.message);
+    } else {
+      Alert.alert("Success!");
+      router.push("/Home");
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
@@ -58,7 +73,7 @@ export default function Login() {
 
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push("/Home")}
+                onPress={() => logUserIn()}
               >
                 <Text style={styles.buttonText}>Login</Text>
               </TouchableOpacity>
