@@ -4,9 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.content}></View>
-    </SafeAreaView>
+    </View>
   );
 }
 
