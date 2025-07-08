@@ -24,7 +24,7 @@ export default function Profile() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView>
         <View style={styles.content}></View>
         <TouchableOpacity style={styles.button} onPress={() => handleLogout()}>
@@ -32,7 +32,7 @@ export default function Profile() {
         </TouchableOpacity>
         <View></View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
