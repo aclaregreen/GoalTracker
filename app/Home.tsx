@@ -1,11 +1,12 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Home() {
   return (
     <View style={styles.container}>
-      <View style={styles.content}></View>
+      <View style={styles.content}>
+        <Text style={{ color: "white" }}>Hey cutie</Text>
+      </View>
     </View>
   );
 }
