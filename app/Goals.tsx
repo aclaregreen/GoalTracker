@@ -5,69 +5,20 @@ import {
   useWindowDimensions,
   FlatList,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import GoalLists from "./components/GoalLists";
 
 const Daily = () => {
-  return (
-    <FlatList
-      data={[
-        { id: "1", name: "Drink Water" },
-        { id: "2", name: "Stretch" },
-      ]}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.itemContainer}>
-          <Text style={styles.itemText}>{item.name}</Text>
-        </View>
-      )}
-      contentContainerStyle={styles.listContainer}
-    ></FlatList>
-  );
+  return <GoalLists type="Daily" />;
 };
 const Weekly = () => {
-  return (
-    <FlatList
-      data={[
-        { id: "1", name: "Do something" },
-        { id: "2", name: "idk man" },
-      ]}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.itemContainer}>
-          <Text style={styles.itemText}>{item.name}</Text>
-        </View>
-      )}
-      contentContainerStyle={styles.listContainer}
-    ></FlatList>
-  );
+  return <GoalLists type="Weekly" />;
 };
 const Milestones = () => {
-  return (
-    <FlatList
-      data={[
-        { id: "1", name: "Test" },
-        { id: "2", name: "this" },
-        { id: "3", name: "thing" },
-        { id: "4", name: "thing" },
-        { id: "5", name: "thing" },
-        { id: "6", name: "thing" },
-        { id: "7", name: "thing" },
-        { id: "8", name: "thing" },
-        { id: "9", name: "thing" },
-        { id: "10", name: "thing" },
-        { id: "11", name: "thing" },
-      ]}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.itemContainer}>
-          <Text style={styles.itemText}>{item.name}</Text>
-        </View>
-      )}
-      contentContainerStyle={styles.listContainer}
-    ></FlatList>
-  );
+  return <GoalLists type="Milestone" />;
 };
 
 const renderScene = SceneMap({
@@ -87,7 +38,6 @@ export default function Goals() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.test}></View>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -102,6 +52,11 @@ export default function Goals() {
         )}
         style={{ flex: 1 }}
       ></TabView>
+      <View style={styles.test}>
+        <TouchableOpacity style={styles.addButton}>
+          <Text style={styles.addText}>+</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -110,9 +65,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#222222",
-  },
-  test: {
-    backgroundColor: "blue",
   },
   itemContainer: {
     backgroundColor: "#555",
@@ -131,5 +83,23 @@ const styles = StyleSheet.create({
     // marginHorizontal: "5%",
     backgroundColor: "#2222",
     paddingBottom: "5%",
+  },
+  test: {
+    position: "absolute",
+    bottom: "5%",
+    right: "5%",
+  },
+  addButton: {
+    width: 75,
+    aspectRatio: 1,
+    backgroundColor: "#00ff1a",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addText: {
+    color: "black",
+    fontSize: 60,
+    lineHeight: 65,
   },
 });
