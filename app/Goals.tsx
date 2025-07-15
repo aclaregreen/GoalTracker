@@ -3,38 +3,59 @@ import {
   View,
   StyleSheet,
   useWindowDimensions,
-  FlatList,
   Text,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { TabView, TabBar } from "react-native-tab-view";
 import GoalLists from "./components/GoalLists";
-
-const Daily = () => {
-  return <GoalLists type="Daily" />;
-};
-const Weekly = () => {
-  return <GoalLists type="Weekly" />;
-};
-const Milestones = () => {
-  return <GoalLists type="Milestone" />;
-};
-
-const renderScene = SceneMap({
-  daily: Daily,
-  weekly: Weekly,
-  milestones: Milestones,
-});
+import AddGoal from "./components/AddGoal";
+import { supabase } from "@/lib/supabase";
+import { Route } from "react-native-tab-view";
 
 export default function Goals() {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [goalName, setGoalName] = useState("");
+  const [goalType, setGoalType] = useState("");
+
+  const renderScene = ({ route }: { route: Route }) => {
+    switch (route.key) {
+      case "daily":
+        return <GoalLists type="Daily" refreshTrigger={refreshTrigger} />;
+      case "weekly":
+        return <GoalLists type="Weekly" refreshTrigger={refreshTrigger} />;
+      case "milestones":
+        return <GoalLists type="Milestone" refreshTrigger={refreshTrigger} />;
+      default:
+        return null;
+    }
+  };
+
   const [routes] = useState([
     { key: "daily", title: "Daily" },
     { key: "weekly", title: "Weekly" },
     { key: "milestones", title: "Milestones" },
   ]);
+
+  const addGoal = async () => {
+    if (goalName == "" || goalType == "") {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("goals")
+      .insert([{ name: goalName, type: goalType }]);
+    if (error) {
+      console.error("Error adding new goal: ", error);
+    } else {
+      setRefreshTrigger((prev) => prev + 1);
+      setGoalName("");
+      setGoalType("");
+      setModalVisible(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,8 +73,22 @@ export default function Goals() {
         )}
         style={{ flex: 1 }}
       ></TabView>
-      <View style={styles.test}>
-        <TouchableOpacity style={styles.addButton}>
+
+      <AddGoal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        goalName={goalName}
+        setGoalName={setGoalName}
+        goalType={goalType}
+        setGoalType={setGoalType}
+        onSubmit={addGoal}
+      />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setModalVisible(true)}
+        >
           <Text style={styles.addText}>+</Text>
         </TouchableOpacity>
       </View>
@@ -79,12 +114,10 @@ const styles = StyleSheet.create({
     padding: "12.5%",
   },
   listContainer: {
-    //height: "100%",
-    // marginHorizontal: "5%",
     backgroundColor: "#2222",
     paddingBottom: "5%",
   },
-  test: {
+  buttonContainer: {
     position: "absolute",
     bottom: "5%",
     right: "5%",

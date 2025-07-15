@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { FlatList, StyleSheet, View, Text } from "react-native";
 
-type GoalType = {
+type GoalListProps = {
   type: "Daily" | "Weekly" | "Milestone";
+  refreshTrigger?: number;
 };
 
 type Goal = {
@@ -12,8 +13,9 @@ type Goal = {
   completed: boolean;
 };
 
-export default function GoalLists({ type }: GoalType) {
+export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
   const [goals, setGoals] = useState<Goal[]>([]);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -39,7 +41,7 @@ export default function GoalLists({ type }: GoalType) {
       }
     };
     fetchGoals();
-  }, [type]);
+  }, [refreshTrigger]);
 
   return (
     <FlatList
