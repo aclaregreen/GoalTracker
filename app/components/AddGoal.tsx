@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Modal,
@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  ScrollView,
+  Keyboard,
+  SafeAreaView,
 } from "react-native";
 
 interface AddGoalModalProps {
@@ -27,27 +30,27 @@ export default function AddGoal({
   setGoalType,
   onSubmit,
 }: AddGoalModalProps) {
-  const addGoal = () => {};
+  const [typeModalVisible, setTypeModalVisible] = useState(false);
 
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      //onRequestClose={() => setModalVisible(false)}
-    >
-      <View style={styles.modal}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalHeader}>
-            <TouchableOpacity style={styles.closeModal} onPress={onClose}>
-              <Text style={styles.x}>Cancel</Text>
-            </TouchableOpacity>
+    <Modal visible={visible} transparent={true}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#333" }}>
+        <View style={styles.modal}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <TouchableOpacity style={styles.closeModal} onPress={onClose}>
+                <Text style={styles.x}>Cancel</Text>
+              </TouchableOpacity>
 
-            <Text style={styles.modalTitle}>New Goal</Text>
-            <View style={styles.placeholder}></View>
-          </View>
+              <Text style={styles.modalTitle}>New Goal</Text>
+              <View style={styles.placeholder}></View>
+            </View>
 
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <View style={{ width: "100%" }}>
+            <ScrollView
+              contentContainerStyle={styles.scrollContainer}
+              style={{ flex: 1 }}
+            >
+              {/* <View style={styles.scrollContainer}> */}
               <TextInput
                 style={styles.inputs}
                 placeholder="Name"
@@ -60,53 +63,67 @@ export default function AddGoal({
                 multiline={true}
                 textAlignVertical="top"
               ></TextInput>
+              <TouchableOpacity
+                style={styles.typeSelector}
+                onPress={() => setTypeModalVisible(true)}
+              >
+                <Text style={styles.typeText}>
+                  {goalType ? goalType : "Select Goal Type"}
+                </Text>
+              </TouchableOpacity>
+              <Modal
+                visible={typeModalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setTypeModalVisible(false)}
+              >
+                <TouchableOpacity
+                  style={styles.typeModal}
+                  activeOpacity={1}
+                  onPressOut={() => setTypeModalVisible(false)}
+                >
+                  <View style={styles.selectMenu}>
+                    <View style={styles.typeHeader}>
+                      <Text style={styles.modalTitle}>Goal Type</Text>
+                    </View>
+                    <View style={styles.typeContainer}>
+                      <TouchableOpacity
+                        style={styles.type}
+                        onPress={() => {
+                          setGoalType("Daily"), setTypeModalVisible(false);
+                        }}
+                      >
+                        <Text style={styles.typeText}>Daily</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.type}
+                        onPress={() => {
+                          setGoalType("Weekly"), setTypeModalVisible(false);
+                        }}
+                      >
+                        <Text style={styles.typeText}>Weekly</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.type}
+                        onPress={() => {
+                          setGoalType("Milestone"), setTypeModalVisible(false);
+                        }}
+                      >
+                        <Text style={styles.typeText}>Milestone</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+            </ScrollView>
+            <View style={styles.footer}>
+              <TouchableOpacity style={styles.addGoal} onPress={onSubmit}>
+                <Text style={styles.x}>Add Goal</Text>
+              </TouchableOpacity>
             </View>
-            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                      <View style={{ flex: 1 }}>
-                        <TextInput style={styles.inputs} placeholder="Name"></TextInput>
-                        <TextInput
-                          style={styles.descriptionInput}
-                          placeholder="Description"
-                          multiline={true}
-                          textAlignVertical="top"
-                        ></TextInput>
-                      </View>
-                    </TouchableWithoutFeedback> */}
-            <View style={styles.typeContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.type,
-                  goalType == "Daily" && styles.selectedType,
-                ]}
-                onPress={() => setGoalType("Daily")}
-              >
-                <Text style={styles.typeText}>Daily</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.type,
-                  goalType == "Weekly" && styles.selectedType,
-                ]}
-                onPress={() => setGoalType("Weekly")}
-              >
-                <Text style={styles.typeText}>Weekly</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.type,
-                  goalType == "Milestone" && styles.selectedType,
-                ]}
-                onPress={() => setGoalType("Milestone")}
-              >
-                <Text style={styles.typeText}>Milestone</Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={styles.addGoal} onPress={onSubmit}>
-              <Text style={styles.x}>Add Goal</Text>
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }
@@ -119,22 +136,31 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)",
   },
   modalContainer: {
-    height: "80%",
-    width: "90%",
+    height: "100%",
+    width: "100%",
     backgroundColor: "#222",
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: "#888",
+    // borderRadius: 5,
+    // borderWidth: 2,
+    // borderColor: "#888",
   },
   modalHeader: {
-    height: "12.5%",
+    height: "5%",
     width: "100%",
-    backgroundColor: "#444",
+    backgroundColor: "#333",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: "5%",
     marginBottom: "5%",
+  },
+  footer: {
+    height: "10%",
+    width: "100%",
+    backgroundColor: "#333",
+    position: "absolute",
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   placeholder: {
     width: "15%",
@@ -142,7 +168,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: "#fff",
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
   },
   closeModal: {
@@ -155,8 +181,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
+  scrollContainer: {
+    // justifyContent: "center",
+    // backgroundColor: "blue",
+    alignItems: "center",
+    flex: 1,
+  },
   inputs: {
-    height: 48,
+    height: "10%",
+    width: "90%",
     marginHorizontal: "5%",
     borderColor: "#888",
     borderWidth: 1,
@@ -167,7 +200,8 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   descriptionInput: {
-    height: 192,
+    height: "20%",
+    width: "90%",
     marginHorizontal: "5%",
     borderColor: "#888",
     borderWidth: 1,
@@ -176,6 +210,39 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontSize: 16,
     color: "#fff",
+  },
+  typeModal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  selectMenu: {
+    height: "30%",
+    width: "100%",
+    backgroundColor: "#333",
+    position: "absolute",
+    bottom: 0,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  typeSelector: {
+    height: "10%",
+    marginHorizontal: "5%",
+    width: "90%",
+    borderColor: "#888",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    fontSize: 16,
+    color: "#fff",
+    justifyContent: "center",
+  },
+  typeHeader: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: "5%",
   },
   typeContainer: {
     justifyContent: "space-between",
@@ -197,11 +264,11 @@ const styles = StyleSheet.create({
     borderColor: "#00ff1a",
   },
   typeText: {
-    color: "#888",
+    color: "#fff",
   },
   addGoal: {
     width: "40%",
-    height: "10%",
+    height: "60%",
     borderRadius: 8,
     backgroundColor: "#007AFF",
     justifyContent: "center",
