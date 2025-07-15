@@ -43,6 +43,16 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
     fetchGoals();
   }, [refreshTrigger]);
 
+  if (goals.length === 0) {
+    return (
+      <View style={styles.messageContainer}>
+        <Text style={styles.messageText}>
+          Your {type} goals will appear here
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={goals}
@@ -74,5 +84,14 @@ const styles = StyleSheet.create({
     // marginHorizontal: "5%",
     backgroundColor: "#2222",
     paddingBottom: "5%",
+  },
+  messageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  messageText: {
+    color: "white",
+    fontSize: 14,
   },
 });

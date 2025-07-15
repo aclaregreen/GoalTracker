@@ -76,7 +76,9 @@ export default function Goals() {
 
       <AddGoal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        onClose={() => {
+          setModalVisible(false), setGoalName(""), setGoalType("");
+        }}
         goalName={goalName}
         setGoalName={setGoalName}
         goalType={goalType}
@@ -99,7 +101,7 @@ export default function Goals() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#222222",
+    backgroundColor: "#222",
   },
   itemContainer: {
     backgroundColor: "#555",
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     padding: "12.5%",
   },
   listContainer: {
-    backgroundColor: "#2222",
+    backgroundColor: "#222",
     paddingBottom: "5%",
   },
   buttonContainer: {
