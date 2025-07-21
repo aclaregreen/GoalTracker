@@ -19,6 +19,7 @@ export default function Goals() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [goalName, setGoalName] = useState("");
   const [goalType, setGoalType] = useState("");
+  const [goalFrequency, setGoalFrequency] = useState("1");
 
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
@@ -46,13 +47,14 @@ export default function Goals() {
 
     const { data, error } = await supabase
       .from("goals")
-      .insert([{ name: goalName, type: goalType }]);
+      .insert([{ name: goalName, type: goalType, frequency: goalFrequency }]);
     if (error) {
       console.error("Error adding new goal: ", error);
     } else {
       setRefreshTrigger((prev) => prev + 1);
       setGoalName("");
       setGoalType("");
+      setGoalFrequency("1");
       setModalVisible(false);
     }
   };
@@ -77,12 +79,17 @@ export default function Goals() {
       <AddGoal
         visible={modalVisible}
         onClose={() => {
-          setModalVisible(false), setGoalName(""), setGoalType("");
+          setModalVisible(false),
+            setGoalName(""),
+            setGoalType(""),
+            setGoalFrequency("1");
         }}
         goalName={goalName}
         setGoalName={setGoalName}
         goalType={goalType}
         setGoalType={setGoalType}
+        goalFrequency={goalFrequency}
+        setGoalFrequency={setGoalFrequency}
         onSubmit={addGoal}
       />
 
