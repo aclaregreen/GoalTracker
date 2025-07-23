@@ -18,6 +18,8 @@ interface AddGoalModalProps {
   setGoalName: (name: string) => void;
   goalType: string;
   setGoalType: (type: string) => void;
+  goalFrequency: string;
+  setGoalFrequency: (type: string) => void;
   onSubmit: () => void;
 }
 
@@ -28,6 +30,8 @@ export default function AddGoal({
   setGoalName,
   goalType,
   setGoalType,
+  goalFrequency,
+  setGoalFrequency,
   onSubmit,
 }: AddGoalModalProps) {
   const [typeModalVisible, setTypeModalVisible] = useState(false);
@@ -71,6 +75,18 @@ export default function AddGoal({
                   {goalType ? goalType : "Select Goal Type"}
                 </Text>
               </TouchableOpacity>
+              <Text
+                style={{ color: "white", fontSize: 18, paddingBottom: "2.5%" }}
+              >
+                Frequency
+              </Text>
+              <TextInput
+                style={styles.inputs}
+                value={goalFrequency}
+                onChangeText={setGoalFrequency}
+                keyboardType="numeric" // brings up the number pad
+                placeholder="Enter frequency"
+              ></TextInput>
               <Modal
                 visible={typeModalVisible}
                 transparent={true}
