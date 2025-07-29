@@ -20,6 +20,8 @@ interface AddGoalModalProps {
   setGoalType: (type: string) => void;
   goalFrequency: string;
   setGoalFrequency: (type: string) => void;
+  goalDescription: string;
+  setGoalDescription: (type: string) => void;
   onSubmit: () => void;
 }
 
@@ -32,9 +34,15 @@ export default function AddGoal({
   setGoalType,
   goalFrequency,
   setGoalFrequency,
+  goalDescription,
+  setGoalDescription,
   onSubmit,
 }: AddGoalModalProps) {
   const [typeModalVisible, setTypeModalVisible] = useState(false);
+  const isFormComplete =
+    goalName.trim() !== "" &&
+    goalType.trim() !== "" &&
+    goalFrequency.trim() !== "";
 
   return (
     <Modal visible={visible} transparent={true}>
@@ -64,6 +72,8 @@ export default function AddGoal({
               <TextInput
                 style={styles.descriptionInput}
                 placeholder="Description"
+                value={goalDescription}
+                onChangeText={setGoalDescription}
                 multiline={true}
                 textAlignVertical="top"
               ></TextInput>
@@ -133,8 +143,22 @@ export default function AddGoal({
               </Modal>
             </ScrollView>
             <View style={styles.footer}>
-              <TouchableOpacity style={styles.addGoal} onPress={onSubmit}>
-                <Text style={styles.x}>Add Goal</Text>
+              <TouchableOpacity
+                style={[
+                  styles.addGoal,
+                  { backgroundColor: isFormComplete ? "#007AFF" : "#444" },
+                ]}
+                onPress={onSubmit}
+                disabled={!isFormComplete}
+              >
+                <Text
+                  style={[
+                    styles.x,
+                    { color: isFormComplete ? "#fff" : "#666" },
+                  ]}
+                >
+                  Add Goal
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -283,7 +307,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   addGoal: {
-    width: "40%",
+    width: "70%",
     height: "60%",
     borderRadius: 8,
     backgroundColor: "#007AFF",
