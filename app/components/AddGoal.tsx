@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import {
-  StyleSheet,
   Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  TextInput,
-  ScrollView,
-  Keyboard,
-  SafeAreaView,
 } from "react-native";
 
 interface AddGoalModalProps {
@@ -23,6 +22,7 @@ interface AddGoalModalProps {
   goalDescription: string;
   setGoalDescription: (type: string) => void;
   onSubmit: () => void;
+  isEditing?: boolean;
 }
 
 export default function AddGoal({
@@ -37,6 +37,7 @@ export default function AddGoal({
   goalDescription,
   setGoalDescription,
   onSubmit,
+  isEditing = false,
 }: AddGoalModalProps) {
   const [typeModalVisible, setTypeModalVisible] = useState(false);
   const isFormComplete =
@@ -54,7 +55,9 @@ export default function AddGoal({
                 <Text style={styles.x}>Cancel</Text>
               </TouchableOpacity>
 
-              <Text style={styles.modalTitle}>New Goal</Text>
+              <Text style={styles.modalTitle}>
+                {isEditing ? "Edit Goal" : "New Goal"}
+              </Text>
               <View style={styles.placeholder}></View>
             </View>
 
@@ -157,7 +160,7 @@ export default function AddGoal({
                     { color: isFormComplete ? "#fff" : "#666" },
                   ]}
                 >
-                  Add Goal
+                  {isEditing ? "Update Goal" : "Add Goal"}
                 </Text>
               </TouchableOpacity>
             </View>
