@@ -1,19 +1,19 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
-  View,
-  Text,
-  TextInput,
   Image,
-  TouchableOpacity,
-  StyleSheet,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import { supabase } from "../lib/supabase";
 
 export function validateNewAccount(
@@ -40,6 +40,14 @@ export default function SignupScreen() {
     if (error) {
       Alert.alert("Error signing up:", error.message);
     } else {
+      // Create profile record with user's timezone
+      if (data.user) {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        await supabase.from("profiles").upsert({
+          id: data.user.id,
+          timezone,
+        });
+      }
       Alert.alert("Success! Please check your email to confirm.");
       router.push("/Home");
     }
