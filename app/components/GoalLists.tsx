@@ -75,7 +75,7 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
     if (newCount < 0) {
       newCount = 0;
     }
-    let newComplete = item.frequency == newCount;
+    let newComplete = item.frequency <= newCount;
     const { error } = await supabase
       .from("goals")
       .update({ numCompleted: newCount, completed: newComplete })
@@ -237,6 +237,13 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
     setOpenMenuId(openMenuId === item.id ? null : item.id);
   };
 
+  const testReset = async () => {
+    const { error } = await supabase.rpc("archive_and_reset_daily_goals");
+    if (error) {
+      console.error("Error resetting", error);
+    }
+  };
+
   if (goals.length === 0) {
     return (
       <View style={styles.messageContainer}>
@@ -256,7 +263,17 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
           <View style={styles.goalCard}>
             <View style={styles.cardTop}>
               <View>
-                <Text style={styles.goalTitle}>{item.name}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.goalTitle}>{item.name}</Text>
+                  {item.completed ? (
+                    <View style={styles.completion}>
+                      <Text>✓</Text>
+                    </View>
+                  ) : (
+                    ""
+                  )}
+                </View>
+
                 <Text style={styles.frequencyText}>
                   {" "}
                   {item.frequency}x{" "}
@@ -278,6 +295,10 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
 
             <View style={styles.content}>
               <View style={styles.cardLeft}>
+                <TouchableOpacity
+                  style={styles.completeButton}
+                  onPress={testReset}
+                ></TouchableOpacity>
                 <AnimatedCircularProgress
                   size={80}
                   width={8}
@@ -311,10 +332,10 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
                   style={({ pressed }) => [
                     styles.completeButton,
                     pressed && { borderColor: "#00ff1a" },
-                    item.completed ? { borderColor: "#00ff1a" } : "",
+                    //item.completed ? { borderColor: "#00ff1a" } : "",
                   ]}
                   onPress={() => addCompletion(item)}
-                  disabled={item.completed}
+                  //disabled={item.completed}
                 >
                   {({ pressed }) => (
                     <Text
@@ -324,10 +345,10 @@ export default function GoalLists({ type, refreshTrigger }: GoalListProps) {
                           fontSize: 20,
                           lineHeight: 22,
                         },
-                        item.completed && { color: "#00ff1a" },
+                        //item.completed && { color: "#00ff1a" },
                       ]}
                     >
-                      {item.completed ? "✓" : "+"}
+                      +
                     </Text>
                   )}
                 </Pressable>
@@ -451,6 +472,15 @@ const styles = StyleSheet.create({
   cardTop: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  completion: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#00ff1a",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 10,
   },
   cardLeft: {
     width: "25%",
