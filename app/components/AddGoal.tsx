@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import {
-  StyleSheet,
   Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  TextInput,
-  ScrollView,
-  Keyboard,
-  SafeAreaView,
 } from "react-native";
 
 interface AddGoalModalProps {
@@ -18,7 +17,12 @@ interface AddGoalModalProps {
   setGoalName: (name: string) => void;
   goalType: string;
   setGoalType: (type: string) => void;
+  goalFrequency: string;
+  setGoalFrequency: (type: string) => void;
+  goalDescription: string;
+  setGoalDescription: (type: string) => void;
   onSubmit: () => void;
+  isEditing?: boolean;
 }
 
 export default function AddGoal({
@@ -28,9 +32,18 @@ export default function AddGoal({
   setGoalName,
   goalType,
   setGoalType,
+  goalFrequency,
+  setGoalFrequency,
+  goalDescription,
+  setGoalDescription,
   onSubmit,
+  isEditing = false,
 }: AddGoalModalProps) {
   const [typeModalVisible, setTypeModalVisible] = useState(false);
+  const isFormComplete =
+    goalName.trim() !== "" &&
+    goalType.trim() !== "" &&
+    goalFrequency.trim() !== "";
 
   return (
     <Modal visible={visible} transparent={true}>
@@ -42,7 +55,9 @@ export default function AddGoal({
                 <Text style={styles.x}>Cancel</Text>
               </TouchableOpacity>
 
-              <Text style={styles.modalTitle}>New Goal</Text>
+              <Text style={styles.modalTitle}>
+                {isEditing ? "Edit Goal" : "New Goal"}
+              </Text>
               <View style={styles.placeholder}></View>
             </View>
 
@@ -60,6 +75,8 @@ export default function AddGoal({
               <TextInput
                 style={styles.descriptionInput}
                 placeholder="Description"
+                value={goalDescription}
+                onChangeText={setGoalDescription}
                 multiline={true}
                 textAlignVertical="top"
               ></TextInput>
@@ -71,6 +88,18 @@ export default function AddGoal({
                   {goalType ? goalType : "Select Goal Type"}
                 </Text>
               </TouchableOpacity>
+              <Text
+                style={{ color: "white", fontSize: 18, paddingBottom: "2.5%" }}
+              >
+                Frequency
+              </Text>
+              <TextInput
+                style={styles.inputs}
+                value={goalFrequency}
+                onChangeText={setGoalFrequency}
+                keyboardType="numeric" // brings up the number pad
+                placeholder="Enter frequency"
+              ></TextInput>
               <Modal
                 visible={typeModalVisible}
                 transparent={true}
@@ -117,8 +146,22 @@ export default function AddGoal({
               </Modal>
             </ScrollView>
             <View style={styles.footer}>
-              <TouchableOpacity style={styles.addGoal} onPress={onSubmit}>
-                <Text style={styles.x}>Add Goal</Text>
+              <TouchableOpacity
+                style={[
+                  styles.addGoal,
+                  { backgroundColor: isFormComplete ? "#007AFF" : "#444" },
+                ]}
+                onPress={onSubmit}
+                disabled={!isFormComplete}
+              >
+                <Text
+                  style={[
+                    styles.x,
+                    { color: isFormComplete ? "#fff" : "#666" },
+                  ]}
+                >
+                  {isEditing ? "Update Goal" : "Add Goal"}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -267,7 +310,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   addGoal: {
-    width: "40%",
+    width: "70%",
     height: "60%",
     borderRadius: 8,
     backgroundColor: "#007AFF",

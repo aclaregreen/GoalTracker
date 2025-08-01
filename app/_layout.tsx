@@ -1,11 +1,12 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
 import { Stack, useRouter, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
   const router = useRouter();
   const pathname = usePathname();
+
   return (
     <View style={styles.container}>
       {/* Stack renders header and screens */}
@@ -123,5 +124,3 @@ const styles = StyleSheet.create({
     height: "45%",
   },
 });
-
-//#00ff1a

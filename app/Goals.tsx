@@ -12,6 +12,9 @@ import AddGoal from "./components/AddGoal";
 import { supabase } from "@/lib/supabase";
 import { Route } from "react-native-tab-view";
 
+import { useNavigation } from "expo-router";
+import { useLayoutEffect } from "react";
+
 export default function Goals() {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -19,6 +22,25 @@ export default function Goals() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [goalName, setGoalName] = useState("");
   const [goalType, setGoalType] = useState("");
+  const [goalFrequency, setGoalFrequency] = useState("1");
+  const [goalDescription, setGoalDescription] = useState("");
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          style={{ marginRight: 15 }}
+        >
+          <Text style={{ color: "#00ff1a", fontWeight: "bold", fontSize: 16 }}>
+            + Add
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
@@ -44,15 +66,22 @@ export default function Goals() {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("goals")
-      .insert([{ name: goalName, type: goalType }]);
+    const { data, error } = await supabase.from("goals").insert([
+      {
+        name: goalName,
+        type: goalType,
+        frequency: goalFrequency,
+        description: goalDescription,
+      },
+    ]);
     if (error) {
       console.error("Error adding new goal: ", error);
     } else {
       setRefreshTrigger((prev) => prev + 1);
       setGoalName("");
       setGoalType("");
+      setGoalFrequency("1");
+      setGoalDescription("");
       setModalVisible(false);
     }
   };
@@ -77,23 +106,22 @@ export default function Goals() {
       <AddGoal
         visible={modalVisible}
         onClose={() => {
-          setModalVisible(false), setGoalName(""), setGoalType("");
+          setModalVisible(false),
+            setGoalName(""),
+            setGoalType(""),
+            setGoalFrequency("1");
+          setGoalDescription("");
         }}
         goalName={goalName}
         setGoalName={setGoalName}
         goalType={goalType}
         setGoalType={setGoalType}
+        goalFrequency={goalFrequency}
+        setGoalFrequency={setGoalFrequency}
+        goalDescription={goalDescription}
+        setGoalDescription={setGoalDescription}
         onSubmit={addGoal}
       />
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.addText}>+</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -118,23 +146,5 @@ const styles = StyleSheet.create({
   listContainer: {
     backgroundColor: "#222",
     paddingBottom: "5%",
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: "5%",
-    right: "5%",
-  },
-  addButton: {
-    width: 75,
-    aspectRatio: 1,
-    backgroundColor: "#00ff1a",
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addText: {
-    color: "black",
-    fontSize: 60,
-    lineHeight: 65,
   },
 });

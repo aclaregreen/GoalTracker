@@ -1,18 +1,18 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
-  View,
-  Text,
-  TextInput,
   Image,
-  TouchableOpacity,
-  StyleSheet,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../lib/supabase";
 
@@ -30,6 +30,14 @@ export default function Login() {
     if (error) {
       Alert.alert("Error logging in:", error.message);
     } else {
+      // Update profile with current timezone
+      if (data.user) {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        await supabase.from("profiles").upsert({
+          id: data.user.id,
+          timezone,
+        });
+      }
       Alert.alert("Success!");
       router.push("/Home");
     }

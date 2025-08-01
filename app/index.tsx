@@ -12,6 +12,13 @@ export default function Index() {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setInitialRoute("/Home");
+        const user = data.session.user;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        await supabase.from("profiles").upsert({
+          id: user.id,
+          timezone,
+        });
       } else {
         setInitialRoute("/Start");
       }
